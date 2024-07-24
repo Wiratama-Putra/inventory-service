@@ -1,0 +1,38 @@
+# Define the stages of the CI/CD pipeline
+stages:
+  - build
+  - test
+  - deploy
+
+# Define a job to build the Docker image
+build:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay2
+  script:
+    - docker build -t myapp:latest .
+  only:
+    - main  # Only run this job on the main branch
+
+# Define a job to run tests
+test:
+  stage: test
+  image: maven:3.8.6-jdk-11
+  script:
+    - mvn clean test
+  only:
+    - main  # Only run this job on the main branch
+
+# Define a job to deploy the Docker image (optional)
+deploy:
+  stage: deploy
+  image: docker:latest
+  script:
+    - echo "Deploying the Docker image..."
+    - docker tag myapp:latest registry.example.com/myapp:latest
+    - docker push registry.example.com/myapp:latest
+  only:
+    - tags  # Only run this job on tags (for releases)

@@ -15,3 +15,16 @@ spring:
     console:
       enabled: true
 
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: ${KEYCLOAK_CLIENT_ID}
+            client-secret: g4uZjINrFqLKcHM5xSn7K8W9ceT5aNKu
+            authorization-grant-type: authorization_code
+            redirect-uri: ${BASE_URL}/login/oauth2/code/keycloak
+            scope: openid, profile, email
+        provider:
+          keycloak:
+            issuer-uri: ${KEYCLOAK_ISSUER_URI}
